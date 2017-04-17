@@ -3,7 +3,7 @@
 typedef struct TCD_istruct * TAD_istruc;
 
 TAD_istruc init();
-TAD_istruc load(TAD_istruc qa , int nsnaps , char* snaps_paths[]);
+TAD_istruc load(TAD_istruc qs , int nsnaps , char* snaps_paths[]);
 
  long all_articles(TAD_istruct qs);
  long unique_articles(TAD_istruct qs);
