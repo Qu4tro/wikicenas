@@ -1,6 +1,10 @@
+#ifndef STRUCTS_H
+#define STRUCTS_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "interface.h"
 
 typedef unsigned int id_t;
 
@@ -41,3 +45,5 @@ typedef struct TCD_istruct {
     // pheap     artigo #nBytes
     // pheap     artigo #nPalavras
 } TCD_istruct;
+
+#endif
