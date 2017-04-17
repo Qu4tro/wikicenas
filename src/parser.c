@@ -23,6 +23,9 @@ void parseText(xmlNodePtr textNode){
         }
     }
     nBytes = i - 1;
+
+
+    // printf("%d - %d\n", nBytes, nWords);
 }
 
 void parseContributor(xmlNodePtr contributor){
@@ -41,6 +44,7 @@ void parseContributor(xmlNodePtr contributor){
     int id = atoi((char*) xmlNodeGetContent(curr));
 
 
+    // printf("%d - %s\n", id, username);
 }
 
 void parseRevision(xmlNodePtr revision){
@@ -65,13 +69,13 @@ void parseRevision(xmlNodePtr revision){
     for(; curr != NULL; curr = curr -> next){
         text = xmlNodeGetContent(curr);
 
-        if (xmlStrcmp(revision -> name, find[find_i]) == 0){
+        if (xmlStrcmp(curr -> name, find[find_i]) == 0){
             if (find_i == 0){
                 timestamp = strdup((char*) text);
             } else if (find_i == 1){
                 parseContributor(curr);
             } else if (find_i == 2){
-                parseText(curr);
+                // parseText(curr);
             }
             find_i += 1;
         } 
@@ -79,9 +83,13 @@ void parseRevision(xmlNodePtr revision){
     }
 
     assert(find_i == 3);
+    // printf("%d - %s\n", id, timestamp);
 }
 
 void parsePage(xmlNodePtr page) {
+    if (xmlStrcmp(page -> name, (const xmlChar *) "page") != 0){
+        printf("%s\n", (char*) page -> name);
+    }
     assert(xmlStrcmp(page -> name, (const xmlChar *) "page") == 0);
 
     xmlNodePtr curr;
@@ -97,19 +105,22 @@ void parsePage(xmlNodePtr page) {
             title = strdup((char*) text);
         } else if (i == 2){
             id = atoi((char*) text);
-        } else if (curr -> next == NULL){
-            parseRevision(curr -> xmlChildrenNode);
+        } else if (xmlStrcmp(curr -> name, (const xmlChar *) "revision") == 0) {
+            parseRevision(curr);
         }
 
         xmlFree(text);
         i++;
     }
+
+    // printf("%d - %s\n", id, title);
 } 
 
 void parseBackup(char* xml_filename) {
     xmlDocPtr doc;  
     xmlNodePtr page;
 
+    xmlKeepBlanksDefault(0);
     doc = xmlParseFile(xml_filename);
     if (doc == NULL ) {
         fprintf(stderr,"xmlParseFile NULL");
@@ -124,3 +135,7 @@ void parseBackup(char* xml_filename) {
     xmlFreeDoc(doc);
     xmlCleanupParser(); 
 }
+
+/* int main(int argc, char** argv){ */
+/*     parseBackup(argv[1]); */
+/* } */
