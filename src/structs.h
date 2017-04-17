@@ -8,7 +8,10 @@ typedef struct Colaborador{
     id_t id;
     id_t nContribuicoes;
     char* username;
-} Colaborador;
+}* Colaborador;
+
+Colaborador novoColaborador(int id, char* username);
+void novaContribuicao(Colaborador c);
 
 typedef struct Artigo {
     id_t id;
@@ -16,13 +19,17 @@ typedef struct Artigo {
 
     size_t nBytes;
     size_t nPalavras;
-} Artigo;
+}* Artigo;
+
+Artigo novoArtigo(int id, char* titulo);
+void novaContagemArtigo(Artigo a, int nBytes, int nPalavras);
 
 typedef struct Revisao {
     id_t id;
     id_t idArtigo;
     char* timestamp;
-} Revisao;
+}* Revisao;
+Revisao novaRevisao(int id, int idArtigo, char* timestamp);
 
 typedef struct TCD_istruct {
     size_t nArtigos;
