@@ -41,7 +41,7 @@ void parseContributor(xmlNodePtr contributor, TCD_istruct* TCD){
 
 
     Colaborador c = novoColaborador(id, username);
-    inserirColaborador(c, TCD);
+    inserirContribuicao(c, TCD);
 }
 
 void parseRevision(xmlNodePtr revision, Artigo a, TCD_istruct* TCD){

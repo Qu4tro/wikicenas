@@ -15,7 +15,6 @@ typedef struct Colaborador{
 }* Colaborador;
 
 Colaborador novoColaborador(int id, char* username);
-/* void novaContribuicao(Colaborador c); */
 
 typedef struct Artigo {
     id_t id;
@@ -49,7 +48,7 @@ typedef struct TCD_istruct {
 }* TCD_istruct;
 
 
-void inserirColaborador(Colaborador c, TCD_istruct* TCD);
+void inserirContribuicao(Colaborador c, TCD_istruct* TCD);
 void inserirRevisao(Revisao r, TCD_istruct* TCD);
 void inserirArtigo(Artigo a, TCD_istruct* TCD);
 
