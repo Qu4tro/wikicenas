@@ -16,8 +16,9 @@ all:
 program: parser.o
 	$(CC) $(CFLAGS) $(SOURCES) -o $(OUT) $(LIBS)
 
+
 %.o: %.c
-	$(CC) -c $(CC_FLAGS) $(XML) $< -o $@
+	$(CC) -c $(CC_FLAGS) $< -o $@
 
 clean:
 	rm -f $(OUT) $(OBJECTS)

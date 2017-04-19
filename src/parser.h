@@ -1,3 +1,6 @@
+#ifndef PARSER_H
+#define PARSER_H
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -11,4 +14,6 @@
 
 #include "structs.h"
 
-void parseBackup(char* xml_filename);
+void parseBackup(char* xml_filename, TCD_istruct* TCD);
+
+#endif
