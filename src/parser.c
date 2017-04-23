@@ -4,7 +4,7 @@ bool space(char c){
     return (c == ' ' || c == '\n' || c == '\t');
 }
 
-void parseText(xmlNodePtr textNode, Artigo a){
+void parseText(xmlNodePtr textNode, Artigo artigo){
     assert(xmlStrcmp(textNode -> name, (const xmlChar *) "text") == 0);
 
     char* text = (char*) xmlNodeGetContent(textNode);
@@ -24,10 +24,10 @@ void parseText(xmlNodePtr textNode, Artigo a){
     }
     nBytes = i - 1;
 
-    contagemArtigo(a, nBytes, nWords);
+    contagemArtigo(artigo, nBytes, nWords);
 }
 
-void parseContributor(xmlNodePtr contributor, TCD_istruct* TCD){
+void parseContributor(xmlNodePtr contributor, id_t revisionID, TCD_istruct TCD){
     assert(xmlStrcmp(contributor -> name, (const xmlChar *) "contributor") == 0);
 
     xmlNodePtr curr = contributor -> xmlChildrenNode;
@@ -39,12 +39,11 @@ void parseContributor(xmlNodePtr contributor, TCD_istruct* TCD){
     curr = curr -> next;
     int id = atoi((char*) xmlNodeGetContent(curr));
 
-
     Colaborador c = novoColaborador(id, username);
-    inserirContribuicao(c, TCD);
+    inserirContribuicao(c, revisionID, TCD);
 }
 
-void parseRevision(xmlNodePtr revision, Artigo a, TCD_istruct* TCD){
+void parseRevision(xmlNodePtr revision, Artigo artigo, TCD_istruct TCD){
     assert(xmlStrcmp(revision -> name, (const xmlChar *) "revision") == 0);
 
  
@@ -65,7 +64,7 @@ void parseRevision(xmlNodePtr revision, Artigo a, TCD_istruct* TCD){
 
 
     for(; curr != NULL; curr = curr -> next){
-        text = xmlNodeGetContent(curr);
+        text = (char*) xmlNodeGetContent(curr);
 
         if (xmlStrcmp(curr -> name, find[find_i]) == 0){
 
@@ -74,58 +73,53 @@ void parseRevision(xmlNodePtr revision, Artigo a, TCD_istruct* TCD){
 
             } else if (find_i == 1){
                 timestamp = strdup((char*) text);
-                r = novaRevisao(id, a -> id, timestamp);
+                r = novaRevisao(id, artigo -> id, timestamp);
                 inserirRevisao(r, TCD);
                 
             } else if (find_i == 2){
-                parseContributor(curr, TCD);
+                parseContributor(curr, id, TCD);
             } else if (find_i == 3){
-                parseText(curr, a);
+                parseText(curr, artigo);
             }
             find_i += 1;
         } 
         xmlFree(text);
     }
 
-    assert(find_i == 3);
+    assert(find_i == 4);
 }
 
-void parsePage(xmlNodePtr page, TCD_istruct* TCD) {
-    if (xmlStrcmp(page -> name, (const xmlChar *) "page") != 0){
-        printf("%s\n", (char*) page -> name);
-    }
+void parsePage(xmlNodePtr page, TCD_istruct TCD) {
     assert(xmlStrcmp(page -> name, (const xmlChar *) "page") == 0);
 
     xmlNodePtr curr;
     xmlChar* text;
-    Artigo a;
+    Artigo artigo;
     char* title;
     int id;
 
     int i = 0;
     for(curr = page -> xmlChildrenNode; curr != NULL; curr = curr -> next){
-        text = xmlNodeGetContent(curr);
+        text = (char*) xmlNodeGetContent(curr);
 
         if (i == 0){
             title = strdup((char*) text);
         } else if (i == 2){
             id = atoi((char*) text);
-            a = novoArtigo(id, title);
+            artigo = novoArtigo(id, title);
         } else if (xmlStrcmp(curr -> name, (const xmlChar *) "revision") == 0) {
-            parseRevision(curr, a, TCD);
+            parseRevision(curr, artigo, TCD);
+            inserirArtigo(artigo, TCD);
         }
 
         xmlFree(text);
-        inserirArtigo(a, TCD);
         i++;
     }
 } 
 
-void parseBackup(char* xml_filename, TCD_istruct* TCD) {
+void parseBackup(char* xml_filename, TCD_istruct TCD) {
     xmlDocPtr doc;  
     xmlNodePtr page;
-
-    int nArtigos = 0;
 
     xmlKeepBlanksDefault(0);
     doc = xmlParseFile(xml_filename);
@@ -137,13 +131,17 @@ void parseBackup(char* xml_filename, TCD_istruct* TCD) {
     page = xmlDocGetRootElement(doc) -> xmlChildrenNode -> next; 
     for(; page != NULL; page = page -> next){
         parsePage(page, TCD);
-        nArtigos++;
     }
 
     xmlFreeDoc(doc);
     xmlCleanupParser(); 
 }
 
-int main(int argc, char** argv){
-    parseBackup(argv[1], NULL);
-}
+/* int main(int argc, char** argv){ */
+
+/*     TCD_istruct TCD = init(); */
+/*     parseBackup(argv[1], TCD); */
+/*     printf("Size Artigos:\t%d\n", g_hash_table_size (TCD -> artigosHT)); */
+/*     printf("Size Revisoes:\t%d\n", g_hash_table_size(TCD -> revisoesHT)); */
+/*     printf("Size Contribuidor:\t%d\n", g_hash_table_size(TCD -> colaboradoresHT)); */
+/* } */

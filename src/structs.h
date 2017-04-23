@@ -1,10 +1,13 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-/* #include <glib.h> */
+
+#include <glib.h>
+#include "tst.h"
 
 typedef unsigned int id_t;
 
@@ -14,42 +17,44 @@ typedef struct Colaborador{
     char* username;
 }* Colaborador;
 
-Colaborador novoColaborador(int id, char* username);
-
 typedef struct Artigo {
     id_t id;
     char* titulo;
 
     size_t nBytes;
-    size_t nWords;
+    size_t nPalavras;
 }* Artigo;
-
-Artigo novoArtigo(int id, char* titulo);
-void contagemArtigo(Artigo a, int nBytes, int nWords);
 
 typedef struct Revisao {
     id_t id;
     id_t idArtigo;
     char* timestamp;
 }* Revisao;
-Revisao novaRevisao(int id, int idArtigo, char* timestamp);
 
 typedef struct TCD_istruct {
-    size_t nArtigos;
-    size_t nRevisoes;
-    /* GHashTable* artigosHT; */
-    /* GHashTable* colaboradoresHT; */
-    // hashtable artigo #titulo
-    // hashtable colabs #usernname
-    // trie      artigo #Nome
-    // pheap     colabs #nContribuicoes
-    // pheap     artigo #nBytes
-    // pheap     artigo #nWords
+    size_t artigosLidos;
+    GHashTable* artigosHT;
+    TTNode*     artigosTT;
+
+    GHashTable* colaboradoresHT;
+    GHashTable* revisoesHT;
+    /* hashtable artigo #titulo */
+    /* hashtable colabs #usernname */
+    /* trie      artigo #Nome */
+    /* pheap     colabs #nContribuicoes */
+    /* pheap     artigo #nBytes */
+    /* pheap     artigo #nWords */
 }* TCD_istruct;
 
 
-void inserirContribuicao(Colaborador c, TCD_istruct* TCD);
-void inserirRevisao(Revisao r, TCD_istruct* TCD);
-void inserirArtigo(Artigo a, TCD_istruct* TCD);
+Artigo novoArtigo(int id, char* titulo);
+void contagemArtigo(Artigo a, int nBytes, int nWords);
+void inserirArtigo(Artigo a, TCD_istruct TCD);
+
+Revisao novaRevisao(int id, int idArtigo, char* timestamp);
+void inserirRevisao(Revisao r, TCD_istruct TCD);
+
+Colaborador novoColaborador(int id, char* username);
+void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD);
 
 #endif

@@ -8,6 +8,8 @@
 #include "structs.h"
 #include "parser.h"
 
+#include "tst.h"
+
 typedef struct TCD_istruct* TAD_istruct;
 
 TAD_istruct init();
