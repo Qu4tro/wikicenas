@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -std=c11 -Wextra -Wfloat-equal -Wshadow -Wpointer-arith -Wunreachable-code -g `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0`
+CFLAGS = -Wall -std=c11 -Wextra -Wfloat-equal -Wshadow -Wpointer-arith -Wunreachable-code -g `pkg-config --cflags glib libxml-2.0` -D_GNU_SOURCE
 LIBS = `pkg-config --libs libxml-2.0` `pkg-config --libs glib-2.0`
 
 SOURCES = $(wildcard *.c)
@@ -13,12 +13,11 @@ all:
 	@echo "\tmake run"
 	@echo "\tmake clean"
 
-program: parser.o
+program: parser.o interface.o structs.o tst.o
 	$(CC) $(CFLAGS) $(SOURCES) -o $(OUT) $(LIBS)
 
-
 %.o: %.c
-	$(CC) -c $(CC_FLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(LIBS) $< -o $@
 
 clean:
 	rm -f $(OUT) $(OBJECTS)

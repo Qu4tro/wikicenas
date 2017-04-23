@@ -12,7 +12,7 @@ TTNode *create_node(char w, bool t) {
 }
 
 TTNode *insert_node(const char *string, TTNode *node) {
-    int i = strlen(string);
+    unsigned i = strlen(string);
 
     if (NULL == node)
         node = create_node(string[0], false);
@@ -36,7 +36,7 @@ TTNode *insert_node(const char *string, TTNode *node) {
 }
 
 TTNode* find_node(TTNode* _node, const char *string) {
-    int i = 0;
+    unsigned i = 0;
 
     while (i < strlen(string)) {
         if (NULL == _node)
@@ -61,13 +61,6 @@ bool contains(TTNode* _node, const char *string) {
     return found -> endWord;
 }
 
-void append(char** strings, char* newString){
-    int i;
-    for(i = 0; strings[i] != NULL; i++);
-    strings[i++] = newString;
-    strings[i] = NULL;
-}
-
 void print_array(char** strings){
     for(int i = 0; strings[i]; i++){
         printf("%s\n", strings[i]);
@@ -75,7 +68,6 @@ void print_array(char** strings){
 }
 
 void deep_search(const char *pattern, TTNode *start, GList** l) {
-
     if (start -> endWord){
         char *_pattern = malloc(strlen(pattern) + 2);
         sprintf(_pattern, "%s%c", pattern, start->word);
@@ -105,7 +97,7 @@ char** find_by_prefix(TTNode* root, const char *pattern) {
     deep_search(pattern, current->mChild, &list);
 
     char** TODO = malloc(sizeof(char*) * (1 + g_list_length(list)));
-    int i;
+    unsigned i;
     for(i = 0; i < g_list_length(list); i++){
         TODO[i] = strdup((char*) g_list_nth_data(list, i));
     }

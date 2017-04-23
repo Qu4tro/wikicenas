@@ -7,11 +7,11 @@
 
 void answer_query(TAD_istruct qs, char q, char* args){
     if (q == '0'){
-        printf("%d\n", all_articles(qs));
+        printf("%ld\n", all_articles(qs));
     } else if (q == '1'){
-        printf("%d\n", unique_articles(qs));
+        printf("%ld\n", unique_articles(qs));
     } else if (q == '2'){
-        printf("%d\n", all_revisions(qs));
+        printf("%ld\n", all_revisions(qs));
     } else if (q == '3'){
         /* long* top_10_contributors(TAD_istruct qs); */
     } else if (q == '4'){
@@ -59,6 +59,7 @@ int main(int argc, char** argv){
     char* cmd = malloc(sizeof(char) * MAX_COMMAND_LENGTH);
     while (1){
         if (fgets(cmd, MAX_COMMAND_LENGTH, stdin) == NULL){
+            qs = clean(qs);
             break;
         }
         cmd[strlen(cmd) - 1] = '\0';

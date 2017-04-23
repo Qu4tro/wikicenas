@@ -64,7 +64,7 @@ void parseRevision(xmlNodePtr revision, Artigo artigo, TCD_istruct TCD){
 
 
     for(; curr != NULL; curr = curr -> next){
-        text = (char*) xmlNodeGetContent(curr);
+        text = xmlNodeGetContent(curr);
 
         if (xmlStrcmp(curr -> name, find[find_i]) == 0){
 
@@ -100,7 +100,7 @@ void parsePage(xmlNodePtr page, TCD_istruct TCD) {
 
     int i = 0;
     for(curr = page -> xmlChildrenNode; curr != NULL; curr = curr -> next){
-        text = (char*) xmlNodeGetContent(curr);
+        text = xmlNodeGetContent(curr);
 
         if (i == 0){
             title = strdup((char*) text);

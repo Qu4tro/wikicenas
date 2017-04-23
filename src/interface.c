@@ -1,5 +1,10 @@
 #include "interface.h"
 
+void TODO(TAD_istruct qs, int n){
+    int x = qs -> artigosLidos;
+    x += n;
+}
+
 TAD_istruct init(){
     TAD_istruct t = malloc(sizeof(struct TCD_istruct));
     t -> artigosLidos = 0;
@@ -17,6 +22,8 @@ TAD_istruct load(TAD_istruct qs , int nsnaps , char* snaps_paths[]){
     for(int i = 0; i < nsnaps; i++){
         parseBackup(snaps_paths[i], qs);
     }
+
+    return NULL;
 }
 
 long all_articles(TAD_istruct qs){
@@ -32,7 +39,8 @@ long all_revisions(TAD_istruct qs){
 }
 
 long* top_10_contributors(TAD_istruct qs){
-
+    TODO(qs, 0);
+    return NULL;
 }
 
 char* contributor_name(long contributor_id, TAD_istruct qs){
@@ -45,7 +53,8 @@ char* contributor_name(long contributor_id, TAD_istruct qs){
 }
 
 long* top_20_largest_articles(TAD_istruct qs){
-
+    TODO(qs, 0);
+    return NULL;
 }
 
 char* article_title(long article_id, TAD_istruct qs){
@@ -58,6 +67,8 @@ char* article_title(long article_id, TAD_istruct qs){
 }
 
 long* top_N_articles_with_more_words(int n, TAD_istruct qs){
+    TODO(qs, n);
+    return NULL;
 }
  
 char** titles_with_prefix(char* prefix, TAD_istruct qs){
@@ -75,5 +86,7 @@ char* article_timestamp(long article_id, long revision_id, TAD_istruct qs){
 }
 
 TAD_istruct clean(TAD_istruct qs){
-
+    TODO(qs, 0);
+    return NULL;
 }
+

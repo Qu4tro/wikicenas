@@ -117,4 +117,6 @@ TCD_istruct initTCD(){
     t -> artigosHT = g_hash_table_new(g_direct_hash, g_direct_equal);
     t -> colaboradoresHT = g_hash_table_new(g_direct_hash, g_direct_equal);
     t -> revisoesHT = g_hash_table_new(g_direct_hash, g_direct_equal);
+
+    return NULL;
 }
