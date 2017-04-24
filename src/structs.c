@@ -24,6 +24,14 @@ void contagemArtigo(Artigo a, int nBytes, int nPalavras){
     a -> nPalavras = nPalavras;
 }
 
+
+void enqueueArtigo(gpointer key, gpointer value, gpointer TCD) {
+    TCD_istruct tcd = TCD;
+    Artigo a = value;
+    long* id = value;
+    enqueue(tcd -> artigosTopW, *id, a -> nPalavras);
+}
+
 void inserirArtigo(Artigo a1, TCD_istruct TCD){
     assert(a1 != NULL);
 
@@ -107,16 +115,3 @@ void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD){
     }
 }
 
-/* ################################################################################ */
-/* ##################################### TCD ###################################### */
-/* ################################################################################ */
-
-TCD_istruct initTCD(){
-    TCD_istruct t = malloc(sizeof(struct TCD_istruct));
-    t -> artigosLidos = 0;
-    t -> artigosHT = g_hash_table_new(g_direct_hash, g_direct_equal);
-    t -> colaboradoresHT = g_hash_table_new(g_direct_hash, g_direct_equal);
-    t -> revisoesHT = g_hash_table_new(g_direct_hash, g_direct_equal);
-
-    return NULL;
-}

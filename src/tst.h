@@ -7,13 +7,7 @@
 #include <string.h>
 #include <glib.h>
 
-typedef struct TTNode {
-  char word;
-  struct TTNode *lChild;
-  struct TTNode *rChild;
-  struct TTNode *mChild;
-  bool endWord;
-} TTNode;
+typedef struct TTNode TTNode;
 
 TTNode* create_node(char w, bool t);
 TTNode* insert_node(const char *string, TTNode *node);

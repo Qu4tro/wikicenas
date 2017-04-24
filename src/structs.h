@@ -8,6 +8,7 @@
 
 #include <glib.h>
 #include "tst.h"
+#include "topN.h"
 
 typedef unsigned int id_t;
 
@@ -33,14 +34,17 @@ typedef struct Revisao {
 
 typedef struct TCD_istruct {
     size_t artigosLidos;
+
     GHashTable* artigosHT;
     TTNode*     artigosTT;
+    PriorityQueue artigosTopW;
+    /* PriorityQueue artigosTopB; */
 
     GHashTable* colaboradoresHT;
+    PriorityQueue colaboradoresTop;
+
     GHashTable* revisoesHT;
-    /* hashtable artigo #titulo */
-    /* hashtable colabs #usernname */
-    /* trie      artigo #Nome */
+
     /* pheap     colabs #nContribuicoes */
     /* pheap     artigo #nBytes */
     /* pheap     artigo #nWords */

@@ -1,5 +1,13 @@
 #include "interface.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "structs.h"
+#include "parser.h"
+
+#include "tst.h"
+
 void TODO(TAD_istruct qs, int n){
     int x = qs -> artigosLidos;
     x += n;
@@ -10,7 +18,9 @@ TAD_istruct init(){
     t -> artigosLidos = 0;
     t -> artigosHT = g_hash_table_new(g_direct_hash, g_direct_equal);
     t -> artigosTT = create_node(' ', true);
+    t -> artigosTopW = pqinit(20);
 
+    t -> colaboradoresTop = pqinit(10);
     t -> colaboradoresHT = g_hash_table_new(g_direct_hash, g_direct_equal);
 
     t -> revisoesHT = g_hash_table_new(g_direct_hash, g_direct_equal);
@@ -22,7 +32,7 @@ TAD_istruct load(TAD_istruct qs , int nsnaps , char* snaps_paths[]){
     for(int i = 0; i < nsnaps; i++){
         parseBackup(snaps_paths[i], qs);
     }
-
+    
     return NULL;
 }
 
@@ -39,8 +49,7 @@ long all_revisions(TAD_istruct qs){
 }
 
 long* top_10_contributors(TAD_istruct qs){
-    TODO(qs, 0);
-    return NULL;
+    return peek_all(qs -> colaboradoresTop);
 }
 
 char* contributor_name(long contributor_id, TAD_istruct qs){
@@ -53,8 +62,7 @@ char* contributor_name(long contributor_id, TAD_istruct qs){
 }
 
 long* top_20_largest_articles(TAD_istruct qs){
-    TODO(qs, 0);
-    return NULL;
+    return peek_all(qs -> artigosTopW);
 }
 
 char* article_title(long article_id, TAD_istruct qs){
@@ -69,6 +77,7 @@ char* article_title(long article_id, TAD_istruct qs){
 long* top_N_articles_with_more_words(int n, TAD_istruct qs){
     TODO(qs, n);
     return NULL;
+    /* return peek_n(qs -> artigosTopB, n); */
 }
  
 char** titles_with_prefix(char* prefix, TAD_istruct qs){

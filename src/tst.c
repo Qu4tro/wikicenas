@@ -1,5 +1,13 @@
 #include "tst.h"
 
+struct TTNode {
+  char word;
+  struct TTNode *lChild;
+  struct TTNode *rChild;
+  struct TTNode *mChild;
+  bool endWord;
+};
+
 TTNode *create_node(char w, bool t) {
     TTNode *_node = (struct TTNode *)malloc(sizeof(struct TTNode));
     _node->word = w;
