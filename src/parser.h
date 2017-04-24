@@ -13,6 +13,7 @@
 #include <libxml/parser.h>
 
 #include "structs.h"
+#include "TCD.h"
 
 void parseBackup(char* xml_filename, TCD_istruct TCD);
 

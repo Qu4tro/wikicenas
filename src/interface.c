@@ -3,28 +3,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "structs.h"
-#include "parser.h"
 
+#include "structs.h"
+#include "TCD.h"
+#include "parser.h"
 #include "tst.h"
 
-void TODO(TAD_istruct qs, int n){
-    int x = qs -> artigosLidos;
-    x += n;
-}
-
 TAD_istruct init(){
-    TAD_istruct t = malloc(sizeof(struct TCD_istruct));
-    t -> artigosLidos = 0;
-    t -> artigosHT = g_hash_table_new(g_direct_hash, g_direct_equal);
-    t -> artigosTT = create_node(' ', true);
-    t -> artigosTopW = pqinit(20);
-
-    t -> colaboradoresTop = pqinit(10);
-    t -> colaboradoresHT = g_hash_table_new(g_direct_hash, g_direct_equal);
-
-    t -> revisoesHT = g_hash_table_new(g_direct_hash, g_direct_equal);
-
+    TAD_istruct t = TCDinit();
     return t;
 }
 
@@ -58,7 +44,7 @@ char* contributor_name(long contributor_id, TAD_istruct qs){
     if (c == NULL){
         return NULL; 
     }
-    return c -> username;
+    return colabUsername(c);
 }
 
 long* top_20_largest_articles(TAD_istruct qs){
@@ -71,11 +57,10 @@ char* article_title(long article_id, TAD_istruct qs){
     if (a == NULL){
         return NULL; 
     }
-    return a -> titulo;
+    return artigoTitulo(a);
 }
 
 long* top_N_articles_with_more_words(int n, TAD_istruct qs){
-    TODO(qs, n);
     return NULL;
     /* return peek_n(qs -> artigosTopB, n); */
 }
@@ -91,11 +76,10 @@ char* article_timestamp(long article_id, long revision_id, TAD_istruct qs){
     if (r == NULL){
         return NULL; 
     }
-    return r -> timestamp;
+    return revisionTimestamp(r);
 }
 
 TAD_istruct clean(TAD_istruct qs){
-    TODO(qs, 0);
     return NULL;
 }
 

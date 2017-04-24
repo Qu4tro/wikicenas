@@ -1,8 +1,41 @@
 #include "structs.h"
 
+
+struct Colaborador{
+    id_t id;
+    id_t nContribuicoes;
+    char* username;
+};
+
+struct Artigo {
+    id_t id;
+    char* titulo;
+
+    size_t nBytes;
+    size_t nPalavras;
+};
+
+
+struct Revisao {
+    id_t id;
+    id_t idArtigo;
+    char* timestamp;
+};
+
+
+
 /* ################################################################################ */
 /* #################################### Artigo #################################### */
 /* ################################################################################ */
+
+id_t artigoID(Artigo a){
+    return a -> id;
+}
+
+char* artigoTitulo(Artigo a){
+    return a -> titulo;
+}
+
 
 Artigo novoArtigo(int id, char* titulo){
     assert(id >= 0);
@@ -15,6 +48,14 @@ Artigo novoArtigo(int id, char* titulo){
     return a;
 }
 
+void updateArtigo(Artigo a, Artigo new){
+    assert(a != NULL);
+
+    a -> titulo = new -> titulo;
+    a -> nBytes = new -> nBytes;
+    a -> nPalavras = new -> nPalavras;
+}
+
 void contagemArtigo(Artigo a, int nBytes, int nPalavras){
     assert(a != NULL);
     assert(nBytes > 0);
@@ -25,34 +66,6 @@ void contagemArtigo(Artigo a, int nBytes, int nPalavras){
 }
 
 
-void enqueueArtigo(gpointer key, gpointer value, gpointer TCD) {
-    TCD_istruct tcd = TCD;
-    Artigo a = value;
-    long* id = value;
-    enqueue(tcd -> artigosTopW, *id, a -> nPalavras);
-}
-
-void inserirArtigo(Artigo a1, TCD_istruct TCD){
-    assert(a1 != NULL);
-
-    Artigo a2;
-    a2 = g_hash_table_lookup(TCD -> artigosHT, GINT_TO_POINTER(a1 -> id));
-
-    if (a2 == NULL){
-        g_hash_table_insert(TCD -> artigosHT, GINT_TO_POINTER(a1 -> id), a1);
-        insert_node(a1 -> titulo, TCD -> artigosTT);
-    } else {
-        a2 -> titulo = a1 -> titulo;
-        if (a2 -> nBytes < a1 -> nBytes){
-            a2 -> nBytes = a1 -> nBytes;
-        }
-        if (a2 -> nPalavras < a1 -> nPalavras){
-            a2 -> nPalavras = a1 -> nPalavras;
-        }
-    }
-
-    TCD -> artigosLidos += 1;
-}
 
 /* ################################################################################ */
 /* ################################### Revisao #################################### */
@@ -70,22 +83,33 @@ Revisao novaRevisao(int id, int idArtigo, char* timestamp){
     return r;
 }
 
-void inserirRevisao(Revisao r1, TCD_istruct TCD){
-    assert(r1 != NULL);
+id_t revisaoID(Revisao r){
+    return r -> id;
+}
 
-    Revisao r2;
-    r2 = g_hash_table_lookup(TCD -> revisoesHT, GINT_TO_POINTER(r1 -> id));
+char* revisionTimestamp(Revisao r){
+    return r -> timestamp;
+}
 
-    if (r2 == NULL){
-        g_hash_table_insert(TCD -> revisoesHT, GINT_TO_POINTER(r1 -> id), r1);
-    } else {
-        r2 -> timestamp = r1 -> timestamp;
-    }
+void updateRevisao(Revisao r2, Revisao r1){
+    r2 -> timestamp = r1 -> timestamp;
 }
 
 /* ################################################################################ */
 /* ################################# Colaborador ################################## */
 /* ################################################################################ */
+
+char* colabUsername(Colaborador c){
+    return c -> username;
+}
+
+int colabContribuicoes(Colaborador c){
+    return c -> nContribuicoes;
+}
+
+id_t colabID(Colaborador c){
+    return c -> id;
+}
 
 Colaborador novoColaborador(int id, char* username){
     assert(id >= 0);
@@ -99,19 +123,11 @@ Colaborador novoColaborador(int id, char* username){
     return c;
 }
 
-void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD){
-    assert(c1 != NULL);
 
-    Colaborador c2;
-    c2 = g_hash_table_lookup(TCD -> colaboradoresHT, GINT_TO_POINTER(c1 -> id));
-
-    if (c2 == NULL){
-        g_hash_table_insert(TCD -> colaboradoresHT, GINT_TO_POINTER(c1 -> id), c1);
-    } else {
-        c2 -> username = c1 -> username;
-        if (g_hash_table_lookup(TCD -> revisoesHT, GINT_TO_POINTER(revisaoID)) == NULL){
-            c2 -> nContribuicoes += 1;
-        }
-    }
+void setUsername(Colaborador c2, Colaborador c1){
+    c2 -> username = c1 -> username;
 }
 
+void incContribuicoes(Colaborador c){
+    c -> nContribuicoes += 1;
+}

@@ -73,7 +73,7 @@ void parseRevision(xmlNodePtr revision, Artigo artigo, TCD_istruct TCD){
 
             } else if (find_i == 1){
                 timestamp = strdup((char*) text);
-                r = novaRevisao(id, artigo -> id, timestamp);
+                r = novaRevisao(id, artigoID(artigo), timestamp);
                 inserirRevisao(r, TCD);
                 
             } else if (find_i == 2){

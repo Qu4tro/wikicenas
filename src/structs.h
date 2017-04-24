@@ -12,53 +12,28 @@
 
 typedef unsigned int id_t;
 
-typedef struct Colaborador{
-    id_t id;
-    id_t nContribuicoes;
-    char* username;
-}* Colaborador;
-
-typedef struct Artigo {
-    id_t id;
-    char* titulo;
-
-    size_t nBytes;
-    size_t nPalavras;
-}* Artigo;
-
-typedef struct Revisao {
-    id_t id;
-    id_t idArtigo;
-    char* timestamp;
-}* Revisao;
-
-typedef struct TCD_istruct {
-    size_t artigosLidos;
-
-    GHashTable* artigosHT;
-    TTNode*     artigosTT;
-    PriorityQueue artigosTopW;
-    /* PriorityQueue artigosTopB; */
-
-    GHashTable* colaboradoresHT;
-    PriorityQueue colaboradoresTop;
-
-    GHashTable* revisoesHT;
-
-    /* pheap     colabs #nContribuicoes */
-    /* pheap     artigo #nBytes */
-    /* pheap     artigo #nWords */
-}* TCD_istruct;
+typedef struct Artigo* Artigo;
+typedef struct Revisao* Revisao;
+typedef struct Colaborador* Colaborador;
 
 
 Artigo novoArtigo(int id, char* titulo);
-void contagemArtigo(Artigo a, int nBytes, int nWords);
-void inserirArtigo(Artigo a, TCD_istruct TCD);
+id_t artigoID(Artigo a);
+char* artigoTitulo(Artigo a);
+
+void contagemArtigo(Artigo a, int nBytes, int nPalavras);
+void updateArtigo(Artigo a1, Artigo a2);
 
 Revisao novaRevisao(int id, int idArtigo, char* timestamp);
-void inserirRevisao(Revisao r, TCD_istruct TCD);
+id_t revisaoID(Revisao r);
+char* revisionTimestamp(Revisao r);
+void updateRevisao(Revisao r2, Revisao r1);
 
+char* colabUsername(Colaborador c);
+int colabContribuicoes(Colaborador c);
+id_t colabID(Colaborador c);
 Colaborador novoColaborador(int id, char* username);
-void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD);
+void setUsername(Colaborador c2, Colaborador c1);
+void incContribuicoes(Colaborador c);
 
 #endif
