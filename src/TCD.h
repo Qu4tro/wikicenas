@@ -15,17 +15,13 @@ struct TCD_istruct {
 
     GHashTable* artigosHT;
     TTNode*     artigosTT;
-    PriorityQueue artigosTopW;
-    /* PriorityQueue artigosTopB; */
+    PriorityQueue* artigosTopW;
+    PriorityQueue* artigosTopB;
 
     GHashTable* colaboradoresHT;
-    PriorityQueue colaboradoresTop;
+    PriorityQueue* colaboradoresTop;
 
     GHashTable* revisoesHT;
-
-    /* pheap     colabs #nContribuicoes */
-    /* pheap     artigo #nBytes */
-    /* pheap     artigo #nWords */
 };
 
 
@@ -34,5 +30,7 @@ TCD_istruct TCDinit();
 void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD);
 void inserirRevisao(Revisao r, TCD_istruct TCD);
 void inserirArtigo(Artigo a, TCD_istruct TCD);
+
+void postprocess(TCD_istruct TCD);
 
 #endif

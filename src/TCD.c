@@ -5,7 +5,8 @@ TCD_istruct TCDinit(){
     t -> artigosLidos = 0;
     t -> artigosHT = g_hash_table_new(g_direct_hash, g_direct_equal);
     t -> artigosTT = create_node(' ', true);
-    t -> artigosTopW = pqinit(20);
+    t -> artigosTopB = pqinit(20);
+    t -> artigosTopW = pqinit(-1);
 
     t -> colaboradoresTop = pqinit(10);
     t -> colaboradoresHT = g_hash_table_new(g_direct_hash, g_direct_equal);
@@ -23,7 +24,6 @@ void inserirArtigo(Artigo a1, TCD_istruct TCD){
 
     if (a2 == NULL){
         g_hash_table_insert(TCD -> artigosHT, GINT_TO_POINTER(artigoID(a1)), a1);
-        insert_node(artigoTitulo(a1), TCD -> artigosTT);
     } else {
         updateArtigo(a2, a1);
         free(a1);
@@ -62,5 +62,34 @@ void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD){
         }
         free(c1);
     }
+}
+
+
+void add2ttree(gpointer key, gpointer value, gpointer user_data) {
+    Artigo artigo = value;
+    TCD_istruct TCD = user_data;
+
+    insert_node(artigoTitulo(artigo), TCD -> artigosTT);
+}
+
+void addA2pheap(gpointer key, gpointer value, gpointer user_data) {
+    Artigo artigo = value;
+    TCD_istruct TCD = user_data;
+
+    enqueue(TCD -> artigosTopB, artigoID(artigo), numberBytes(artigo));
+    enqueue(TCD -> artigosTopW, artigoID(artigo), numberWords(artigo));
+}
+
+void addC2pheap(gpointer key, gpointer value, gpointer user_data) {
+    Colaborador c = value;
+    TCD_istruct TCD = user_data;
+
+    enqueue(TCD -> colaboradoresTop, colabID(c), colabContribuicoes(c));
+}
+
+void postprocess(TCD_istruct TCD){
+    g_hash_table_foreach(TCD -> artigosHT, add2ttree, TCD);
+    g_hash_table_foreach(TCD -> artigosHT, addA2pheap, TCD);
+    g_hash_table_foreach(TCD -> colaboradoresHT, addC2pheap, TCD);
 }
 

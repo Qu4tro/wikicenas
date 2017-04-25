@@ -15,6 +15,6 @@
 #include "structs.h"
 #include "TCD.h"
 
-void parseBackup(char* xml_filename, TCD_istruct TCD);
+TCD_istruct parseBackup(char* xml_filename, TCD_istruct TCD);
 
 #endif

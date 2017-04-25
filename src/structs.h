@@ -20,6 +20,8 @@ typedef struct Colaborador* Colaborador;
 Artigo novoArtigo(int id, char* titulo);
 id_t artigoID(Artigo a);
 char* artigoTitulo(Artigo a);
+int numberWords(Artigo a);
+int numberBytes(Artigo a);
 
 void contagemArtigo(Artigo a, int nBytes, int nPalavras);
 void updateArtigo(Artigo a1, Artigo a2);

@@ -14,7 +14,11 @@ void answer_query(TAD_istruct qs, char q, char* args){
     } else if (q == '2'){
         printf("%ld\n", all_revisions(qs));
     } else if (q == '3'){
-        /* long* top_10_contributors(TAD_istruct qs); */
+        long* t10 = top_10_contributors(qs);
+        for(int i = 0; i < 10; i++){
+            printf("%ld ", t10[i]);
+        }
+        printf("\n");
     } else if (q == '4'){
         char* name = contributor_name(atoi(args), qs);
         if (name != NULL){
@@ -23,7 +27,11 @@ void answer_query(TAD_istruct qs, char q, char* args){
             printf("not found\n") ;
         }
     } else if (q == '5'){
-        /* long* top_20_largest_articles(TAD_istruct qs); */
+        long* t20 = top_20_largest_articles(qs);
+        for(int i = 0; i < 20; i++){
+            printf("%ld ", t20[i]);
+        }
+        printf("\n");
     } else if (q == '6'){
         char* title = article_title(atoi(args), qs);
         if (title != NULL){
@@ -32,6 +40,12 @@ void answer_query(TAD_istruct qs, char q, char* args){
             printf("not found\n") ;
         }
     } else if (q == '7'){
+        int n = atoi(args);
+        long* tN = top_N_articles_with_more_words(n, qs);
+        for(int i = 0; i < n; i++){
+            printf("%ld ", tN[i]);
+        }
+        printf("\n");
         /* long* top_N_articles_with_more_words(long n, TAD_istruct qs); */
     } else if (q == '8'){
         char** titles = titles_with_prefix(args, qs);
@@ -72,7 +86,7 @@ int main(int argc, char** argv){
             break;
         } else if(cmd[0] == 'l'){
             printf("loading\n");
-            load(qs, argc, argv);
+            qs = load(qs, argc, argv);
             printf("loaded\n");
         } else if (cmd[0] >= '0' && cmd[0] <= '9'){
             answer_query(qs, cmd[0], cmd + 1);

@@ -36,6 +36,13 @@ char* artigoTitulo(Artigo a){
     return a -> titulo;
 }
 
+int numberBytes(Artigo a){
+    return a -> nBytes;
+}
+
+int numberWords(Artigo a){
+    return a -> nPalavras;
+}
 
 Artigo novoArtigo(int id, char* titulo){
     assert(id >= 0);

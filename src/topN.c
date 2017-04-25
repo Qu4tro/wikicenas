@@ -6,7 +6,8 @@ typedef struct node_t {
     size_t pos;
 } node_t;
 
-struct PriorityQueue {
+struct PriQueue {
+    bool dynamic;
     int capacity;
     node_t** nodes;
     pqueue_t* minpq;
@@ -29,13 +30,21 @@ size_t get_pos(void *a) { return ((node_t *)a)->pos; }
 
 void set_pos(void *a, size_t pos) { ((node_t *)a)->pos = pos; }
 
-PriorityQueue pqinit(int capacity) {
+PriQueue pqinit(int capacity) {
 
-    PriorityQueue pq;
-    node_t** ns = malloc((capacity + 1) * sizeof(node_t));
+    PriQueue pq;
 
-    if (!(pq = malloc(sizeof(struct PriorityQueue))))
+    if (!(pq = malloc(sizeof(struct PriQueue))))
         return NULL;
+
+    if (capacity < 0){
+        capacity = 128;
+        pq -> dynamic = true; 
+    } else {
+        pq -> dynamic = false; 
+    }
+
+    node_t** ns = malloc((capacity + 1) * sizeof(node_t));
 
     pq -> capacity = capacity;
     pq -> minpq =
@@ -44,15 +53,14 @@ PriorityQueue pqinit(int capacity) {
         pqueue_init(10, cmp_pri_max, get_pri, set_pri, get_pos, set_pos);
     pq -> nodes = ns;
 
-
     return pq;
 }
 
-long* peek_all(PriorityQueue pq){
+long* peek_all(PriQueue pq){
     return peek_n(pq, pqueue_size(pq -> minpq));
 }
 
-long* peek_n(PriorityQueue pq, int n){
+long* peek_n(PriQueue pq, int n){
     long* vals = malloc(n * sizeof(long));
     node_t** nodes = malloc(n * sizeof(node_t));
     for(int i = 0; i < n; i++){
@@ -68,17 +76,21 @@ long* peek_n(PriorityQueue pq, int n){
 }
 
 
-void enqueue(PriorityQueue pq, long val, pqueue_pri_t pri){
+void enqueue(PriQueue pq, long val, pqueue_pri_t pri){
     int size = pqueue_size(pq -> minpq);
+
     pq -> nodes[size] = malloc(sizeof(node_t));
     pq -> nodes[size] -> pri = pri;
     pq -> nodes[size] -> val = val;
     pqueue_insert(pq -> minpq, pq -> nodes[size]);
     pqueue_insert(pq -> maxpq, pq -> nodes[size]);
 
-    if (size + 1 > pq -> capacity){
-        pq -> nodes[size] = pqueue_pop(pq -> minpq);
-        int r = pqueue_remove(pq -> minpq, pq -> nodes[size]);
-        assert(r == 0);
+    if (size > pq -> capacity){
+        if (pq -> dynamic){
+            pq -> capacity *= 1.5;
+            pq -> nodes = realloc(pq -> nodes, (pq -> capacity) * sizeof(node_t));
+        } else {
+            pqueue_remove(pq -> maxpq, pqueue_pop(pq -> minpq));
+        }
     }
 }

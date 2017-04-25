@@ -7,13 +7,14 @@
 
 #include "pqueue.h"
 
-typedef struct PriorityQueue* PriorityQueue;
+typedef struct PriQueue* PriQueue;
+typedef struct PriQueue PriorityQueue;
 
-PriorityQueue pqinit(int capacity);
+PriQueue pqinit(int capacity);
 
-void enqueue(PriorityQueue pq, long val, pqueue_pri_t pri);
+void enqueue(PriQueue pq, long val, pqueue_pri_t pri);
 
-long* peek_n(PriorityQueue pq, int n);
-long* peek_all(PriorityQueue pq);
+long* peek_n(PriQueue pq, int n);
+long* peek_all(PriQueue pq);
 
 #endif

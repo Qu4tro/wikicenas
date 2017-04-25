@@ -16,10 +16,11 @@ TAD_istruct init(){
 
 TAD_istruct load(TAD_istruct qs , int nsnaps , char* snaps_paths[]){
     for(int i = 0; i < nsnaps; i++){
-        parseBackup(snaps_paths[i], qs);
+        qs = parseBackup(snaps_paths[i], qs);
     }
+    postprocess(qs);
     
-    return NULL;
+    return qs;
 }
 
 long all_articles(TAD_istruct qs){
@@ -48,7 +49,7 @@ char* contributor_name(long contributor_id, TAD_istruct qs){
 }
 
 long* top_20_largest_articles(TAD_istruct qs){
-    return peek_all(qs -> artigosTopW);
+    return peek_all(qs -> artigosTopB);
 }
 
 char* article_title(long article_id, TAD_istruct qs){
@@ -61,8 +62,7 @@ char* article_title(long article_id, TAD_istruct qs){
 }
 
 long* top_N_articles_with_more_words(int n, TAD_istruct qs){
-    return NULL;
-    /* return peek_n(qs -> artigosTopB, n); */
+    return peek_n(qs -> artigosTopW, n);
 }
  
 char** titles_with_prefix(char* prefix, TAD_istruct qs){

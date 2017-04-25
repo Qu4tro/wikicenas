@@ -117,7 +117,7 @@ void parsePage(xmlNodePtr page, TCD_istruct TCD) {
     }
 } 
 
-void parseBackup(char* xml_filename, TCD_istruct TCD) {
+TCD_istruct parseBackup(char* xml_filename, TCD_istruct TCD) {
     xmlDocPtr doc;  
     xmlNodePtr page;
 
@@ -125,7 +125,7 @@ void parseBackup(char* xml_filename, TCD_istruct TCD) {
     doc = xmlParseFile(xml_filename);
     if (doc == NULL ) {
         fprintf(stderr,"xmlParseFile NULL");
-        return;
+        return NULL;
     }
 
     page = xmlDocGetRootElement(doc) -> xmlChildrenNode -> next; 
@@ -135,6 +135,8 @@ void parseBackup(char* xml_filename, TCD_istruct TCD) {
 
     xmlFreeDoc(doc);
     xmlCleanupParser(); 
+
+    return TCD;
 }
 
 /* int main(int argc, char** argv){ */
