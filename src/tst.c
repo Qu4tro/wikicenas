@@ -77,13 +77,13 @@ void print_array(char** strings){
 
 void deep_search(const char *pattern, TTNode *start, GList** l) {
     if (start -> endWord){
-        char *_pattern = malloc(strlen(pattern) + 2);
+        char* _pattern = malloc(strlen(pattern) + 2);
         sprintf(_pattern, "%s%c", pattern, start->word);
         *l = g_list_append(*l, _pattern);
     }
 
     if (start -> mChild != NULL) {
-        char *_pattern = malloc(strlen(pattern) + 2);
+        char* _pattern = malloc(strlen(pattern) + 2);
         sprintf(_pattern, "%s%c", pattern, start->word);
         deep_search(_pattern, start->mChild, l);
     }
@@ -104,12 +104,24 @@ char** find_by_prefix(TTNode* root, const char *pattern) {
     GList* list = NULL;
     deep_search(pattern, current->mChild, &list);
 
-    char** TODO = malloc(sizeof(char*) * (1 + g_list_length(list)));
+    char** result = malloc(sizeof(char*) * (1 + g_list_length(list)));
     unsigned i;
     for(i = 0; i < g_list_length(list); i++){
-        TODO[i] = strdup((char*) g_list_nth_data(list, i));
+        result[i] = strdup((char*) g_list_nth_data(list, i));
     }
-    TODO[i] = NULL;
+    g_list_free(list);
 
-    return TODO;
+    result[i] = NULL;
+
+    return result;
+}
+
+void freeTT(TTNode* node){
+    if (node){
+        freeTT(node -> lChild);
+        freeTT(node -> mChild);
+        freeTT(node -> rChild);
+        free(node);
+        node = NULL;
+    }
 }

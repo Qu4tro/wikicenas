@@ -14,10 +14,8 @@ TAD_istruct init(){
     return t;
 }
 
-TAD_istruct load(TAD_istruct qs , int nsnaps , char* snaps_paths[]){
-    for(int i = 0; i < nsnaps; i++){
-        qs = parseBackup(snaps_paths[i], qs);
-    }
+TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]){
+    qs = parseBackup(nsnaps, snaps_paths, qs);
     postprocess(qs);
     
     return qs;
@@ -36,7 +34,7 @@ long all_revisions(TAD_istruct qs){
 }
 
 long* top_10_contributors(TAD_istruct qs){
-    return peek_all(qs -> colaboradoresTop);
+    return peek_n(qs -> colaboradoresTop, 10);
 }
 
 char* contributor_name(long contributor_id, TAD_istruct qs){
@@ -49,7 +47,7 @@ char* contributor_name(long contributor_id, TAD_istruct qs){
 }
 
 long* top_20_largest_articles(TAD_istruct qs){
-    return peek_all(qs -> artigosTopB);
+    return peek_n(qs -> artigosTopB, 20);
 }
 
 char* article_title(long article_id, TAD_istruct qs){
@@ -80,6 +78,6 @@ char* article_timestamp(long article_id, long revision_id, TAD_istruct qs){
 }
 
 TAD_istruct clean(TAD_istruct qs){
-    return NULL;
+    return freeTCD(qs);
 }
 

@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//#define NDEBUG 
 
 #include <assert.h>
 #include <libxml/xmlmemory.h>
@@ -15,6 +14,6 @@
 #include "structs.h"
 #include "TCD.h"
 
-TCD_istruct parseBackup(char* xml_filename, TCD_istruct TCD);
+TCD_istruct parseBackup(int nfiles, char** xml_filenames, TCD_istruct TCD);
 
 #endif

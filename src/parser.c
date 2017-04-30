@@ -8,8 +8,8 @@ void parseText(xmlNodePtr textNode, Artigo artigo){
     assert(xmlStrcmp(textNode -> name, (const xmlChar *) "text") == 0);
 
     char* text = (char*) xmlNodeGetContent(textNode);
-    int nBytes;
-    int nWords;
+    long nBytes = 0;
+    long nWords = 0;
     bool inWord = false;
 
     int i;
@@ -27,7 +27,7 @@ void parseText(xmlNodePtr textNode, Artigo artigo){
     contagemArtigo(artigo, nBytes, nWords);
 }
 
-void parseContributor(xmlNodePtr contributor, id_t revisionID, TCD_istruct TCD){
+void parseContributor(xmlNodePtr contributor, idW_t revisionID, TCD_istruct TCD){
     assert(xmlStrcmp(contributor -> name, (const xmlChar *) "contributor") == 0);
 
     xmlNodePtr curr = contributor -> xmlChildrenNode;
@@ -37,7 +37,7 @@ void parseContributor(xmlNodePtr contributor, id_t revisionID, TCD_istruct TCD){
     
     char* username = strdup((char*) xmlNodeGetContent(curr));
     curr = curr -> next;
-    int id = atoi((char*) xmlNodeGetContent(curr));
+    idW_t id = atoi((char*) xmlNodeGetContent(curr));
 
     Colaborador c = novoColaborador(id, username);
     inserirContribuicao(c, revisionID, TCD);
@@ -45,7 +45,6 @@ void parseContributor(xmlNodePtr contributor, id_t revisionID, TCD_istruct TCD){
 
 void parseRevision(xmlNodePtr revision, Artigo artigo, TCD_istruct TCD){
     assert(xmlStrcmp(revision -> name, (const xmlChar *) "revision") == 0);
-
  
     const xmlChar* find[] = { (const xmlChar*) "id"
                             , (const xmlChar*) "timestamp"
@@ -58,10 +57,9 @@ void parseRevision(xmlNodePtr revision, Artigo artigo, TCD_istruct TCD){
     xmlChar* text;
 
     xmlNodePtr curr = revision -> xmlChildrenNode;
-    id_t id = atoi((char*) xmlNodeGetContent(curr));
+    idW_t id = atoi((char*) xmlNodeGetContent(curr));
     char* timestamp;
     Revisao r;
-
 
     for(; curr != NULL; curr = curr -> next){
         text = xmlNodeGetContent(curr);
@@ -74,11 +72,12 @@ void parseRevision(xmlNodePtr revision, Artigo artigo, TCD_istruct TCD){
             } else if (find_i == 1){
                 timestamp = strdup((char*) text);
                 r = novaRevisao(id, artigoID(artigo), timestamp);
-                inserirRevisao(r, TCD);
                 
             } else if (find_i == 2){
                 parseContributor(curr, id, TCD);
+                inserirRevisao(r, TCD);
             } else if (find_i == 3){
+                // if timestamp is new
                 parseText(curr, artigo);
             }
             find_i += 1;
@@ -96,7 +95,7 @@ void parsePage(xmlNodePtr page, TCD_istruct TCD) {
     xmlChar* text;
     Artigo artigo;
     char* title;
-    int id;
+    idW_t id;
 
     int i = 0;
     for(curr = page -> xmlChildrenNode; curr != NULL; curr = curr -> next){
@@ -117,33 +116,28 @@ void parsePage(xmlNodePtr page, TCD_istruct TCD) {
     }
 } 
 
-TCD_istruct parseBackup(char* xml_filename, TCD_istruct TCD) {
+TCD_istruct parseBackup(int nfiles, char** xml_filenames, TCD_istruct TCD) {
+
     xmlDocPtr doc;  
     xmlNodePtr page;
 
-    xmlKeepBlanksDefault(0);
-    doc = xmlParseFile(xml_filename);
-    if (doc == NULL ) {
-        fprintf(stderr,"xmlParseFile NULL");
-        return NULL;
-    }
+    for(int i = 0; i < nfiles; i++){
+        xmlKeepBlanksDefault(0);
+        doc = xmlParseFile(xml_filenames[i]);
+        if (doc == NULL ) {
+            fprintf(stderr,"xmlParseFile NULL");
+            return NULL;
+        }
 
-    page = xmlDocGetRootElement(doc) -> xmlChildrenNode -> next; 
-    for(; page != NULL; page = page -> next){
-        parsePage(page, TCD);
-    }
+        page = xmlDocGetRootElement(doc) -> xmlChildrenNode -> next; 
+        for(; page != NULL; page = page -> next){
+            parsePage(page, TCD);
+        }
 
-    xmlFreeDoc(doc);
-    xmlCleanupParser(); 
+        xmlFreeDoc(doc);
+        xmlCleanupParser(); 
+    }
 
     return TCD;
 }
 
-/* int main(int argc, char** argv){ */
-
-/*     TCD_istruct TCD = init(); */
-/*     parseBackup(argv[1], TCD); */
-/*     printf("Size Artigos:\t%d\n", g_hash_table_size (TCD -> artigosHT)); */
-/*     printf("Size Revisoes:\t%d\n", g_hash_table_size(TCD -> revisoesHT)); */
-/*     printf("Size Contribuidor:\t%d\n", g_hash_table_size(TCD -> colaboradoresHT)); */
-/* } */

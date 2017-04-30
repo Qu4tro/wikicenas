@@ -1,6 +1,8 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
+#define NDEBUG 
+
 typedef struct TCD_istruct* TAD_istruct;
 
 TAD_istruct init();

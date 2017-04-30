@@ -27,10 +27,12 @@ struct TCD_istruct {
 
 TCD_istruct TCDinit();
 
-void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD);
+void inserirContribuicao(Colaborador c1, idW_t revisaoID, TCD_istruct TCD);
 void inserirRevisao(Revisao r, TCD_istruct TCD);
 void inserirArtigo(Artigo a, TCD_istruct TCD);
 
 void postprocess(TCD_istruct TCD);
+
+TCD_istruct freeTCD(TCD_istruct TCD);
 
 #endif

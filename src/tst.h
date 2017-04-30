@@ -16,4 +16,6 @@ bool contains(TTNode* _node, const char *string);
 
 char** find_by_prefix(TTNode* root, const char *pattern);
 
+void freeTT(TTNode* root);
+
 #endif

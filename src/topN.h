@@ -17,4 +17,6 @@ void enqueue(PriQueue pq, long val, pqueue_pri_t pri);
 long* peek_n(PriQueue pq, int n);
 long* peek_all(PriQueue pq);
 
+void pqfree(PriQueue pq);
+
 #endif

@@ -1,17 +1,32 @@
 #include "TCD.h"
 
+TCD_istruct freeTCD(TCD_istruct TCD){
+
+    if (TCD){
+        pqfree(TCD -> artigosTopB);
+        pqfree(TCD -> artigosTopW);
+        pqfree(TCD -> colaboradoresTop);
+        freeTT(TCD -> artigosTT);
+
+        free(TCD);
+        TCD = NULL;
+    }
+
+    return TCD;
+}
+
 TCD_istruct TCDinit(){
     TCD_istruct t = malloc(sizeof(struct TCD_istruct));
     t -> artigosLidos = 0;
-    t -> artigosHT = g_hash_table_new(g_direct_hash, g_direct_equal);
+    t -> artigosHT = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, freeArtigo);
     t -> artigosTT = create_node(' ', true);
-    t -> artigosTopB = pqinit(20);
+    t -> artigosTopB = pqinit(-1);
     t -> artigosTopW = pqinit(-1);
 
-    t -> colaboradoresTop = pqinit(10);
-    t -> colaboradoresHT = g_hash_table_new(g_direct_hash, g_direct_equal);
+    t -> colaboradoresTop = pqinit(-1);
+    t -> colaboradoresHT = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, freeContribuidor);
 
-    t -> revisoesHT = g_hash_table_new(g_direct_hash, g_direct_equal);
+    t -> revisoesHT = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, freeRevisao);
 
     return t;
 }
@@ -47,7 +62,7 @@ void inserirRevisao(Revisao r1, TCD_istruct TCD){
 }
 
 
-void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD){
+void inserirContribuicao(Colaborador c1, idW_t revisaoID, TCD_istruct TCD){
     assert(c1 != NULL);
 
     Colaborador c2;
@@ -55,7 +70,9 @@ void inserirContribuicao(Colaborador c1, id_t revisaoID, TCD_istruct TCD){
 
     if (c2 == NULL){
         g_hash_table_insert(TCD -> colaboradoresHT, GINT_TO_POINTER(colabID(c1)), c1);
+        incContribuicoes(c1);
     } else {
+        /* printf("%s - %ld: %ld\n", colabUsername(c2), colabID(c2), colabContribuicoes(c2)); */
         setUsername(c2, c1);
         if (g_hash_table_lookup(TCD -> revisoesHT, GINT_TO_POINTER(revisaoID)) == NULL){
             incContribuicoes(c2);

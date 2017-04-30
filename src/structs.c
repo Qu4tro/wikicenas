@@ -1,14 +1,15 @@
 #include "structs.h"
-
+  
+#define max(a, b) ((a) > (b) ? (a) : (b))
 
 struct Colaborador{
-    id_t id;
-    id_t nContribuicoes;
+    idW_t id;
+    idW_t nContribuicoes;
     char* username;
 };
 
 struct Artigo {
-    id_t id;
+    idW_t id;
     char* titulo;
 
     size_t nBytes;
@@ -17,8 +18,8 @@ struct Artigo {
 
 
 struct Revisao {
-    id_t id;
-    id_t idArtigo;
+    idW_t id;
+    idW_t idArtigo;
     char* timestamp;
 };
 
@@ -28,7 +29,7 @@ struct Revisao {
 /* #################################### Artigo #################################### */
 /* ################################################################################ */
 
-id_t artigoID(Artigo a){
+idW_t artigoID(Artigo a){
     return a -> id;
 }
 
@@ -36,15 +37,15 @@ char* artigoTitulo(Artigo a){
     return a -> titulo;
 }
 
-int numberBytes(Artigo a){
+long numberBytes(Artigo a){
     return a -> nBytes;
 }
 
-int numberWords(Artigo a){
+long numberWords(Artigo a){
     return a -> nPalavras;
 }
 
-Artigo novoArtigo(int id, char* titulo){
+Artigo novoArtigo(idW_t id, char* titulo){
     assert(id >= 0);
     assert(titulo != NULL);
 
@@ -59,11 +60,11 @@ void updateArtigo(Artigo a, Artigo new){
     assert(a != NULL);
 
     a -> titulo = new -> titulo;
-    a -> nBytes = new -> nBytes;
-    a -> nPalavras = new -> nPalavras;
+    a -> nBytes = max(a -> nBytes, new -> nBytes);
+    a -> nPalavras = max(a -> nPalavras, new -> nPalavras);
 }
 
-void contagemArtigo(Artigo a, int nBytes, int nPalavras){
+void contagemArtigo(Artigo a, long nBytes, long nPalavras){
     assert(a != NULL);
     assert(nBytes > 0);
     assert(nPalavras > 0);
@@ -72,13 +73,18 @@ void contagemArtigo(Artigo a, int nBytes, int nPalavras){
     a -> nPalavras = nPalavras;
 }
 
+void freeArtigo(gpointer p){
+    Artigo a = p;
+    free(a -> titulo);
+    free(a);
+}
 
 
 /* ################################################################################ */
 /* ################################### Revisao #################################### */
 /* ################################################################################ */
 
-Revisao novaRevisao(int id, int idArtigo, char* timestamp){
+Revisao novaRevisao(long id, long idArtigo, char* timestamp){
     assert(id >= 0);
     assert(timestamp != NULL);
 
@@ -90,7 +96,7 @@ Revisao novaRevisao(int id, int idArtigo, char* timestamp){
     return r;
 }
 
-id_t revisaoID(Revisao r){
+idW_t revisaoID(Revisao r){
     return r -> id;
 }
 
@@ -102,6 +108,12 @@ void updateRevisao(Revisao r2, Revisao r1){
     r2 -> timestamp = r1 -> timestamp;
 }
 
+void freeRevisao(gpointer p){
+    Revisao r = p;
+    free(r -> timestamp);
+    free(r);
+}
+
 /* ################################################################################ */
 /* ################################# Colaborador ################################## */
 /* ################################################################################ */
@@ -110,15 +122,15 @@ char* colabUsername(Colaborador c){
     return c -> username;
 }
 
-int colabContribuicoes(Colaborador c){
+long colabContribuicoes(Colaborador c){
     return c -> nContribuicoes;
 }
 
-id_t colabID(Colaborador c){
+idW_t colabID(Colaborador c){
     return c -> id;
 }
 
-Colaborador novoColaborador(int id, char* username){
+Colaborador novoColaborador(idW_t id, char* username){
     assert(id >= 0);
     assert(username != NULL);
 
@@ -137,4 +149,10 @@ void setUsername(Colaborador c2, Colaborador c1){
 
 void incContribuicoes(Colaborador c){
     c -> nContribuicoes += 1;
+}
+
+void freeContribuidor(gpointer p){
+    Colaborador c = p;
+    free(c -> username);
+    free(c);
 }

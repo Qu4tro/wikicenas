@@ -44,14 +44,12 @@ PriQueue pqinit(int capacity) {
         pq -> dynamic = false; 
     }
 
-    node_t** ns = malloc((capacity + 1) * sizeof(node_t));
-
     pq -> capacity = capacity;
     pq -> minpq =
         pqueue_init(10, cmp_pri_min, get_pri, set_pri, get_pos, set_pos);
     pq -> maxpq =
         pqueue_init(10, cmp_pri_max, get_pri, set_pri, get_pos, set_pos);
-    pq -> nodes = ns;
+    pq -> nodes = malloc((capacity + 1) * sizeof(node_t));
 
     return pq;
 }
@@ -93,4 +91,13 @@ void enqueue(PriQueue pq, long val, pqueue_pri_t pri){
             pqueue_remove(pq -> maxpq, pqueue_pop(pq -> minpq));
         }
     }
+}
+
+void pqfree(PriQueue pq){
+    pqueue_free(pq -> minpq);
+    pqueue_free(pq -> maxpq);
+    free(pq -> nodes);
+    pq -> nodes = NULL;
+    free(pq);
+    pq = NULL;
 }
