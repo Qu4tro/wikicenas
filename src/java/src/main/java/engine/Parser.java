@@ -95,7 +95,7 @@ class Handler extends DefaultHandler {
                         page_id = Long.parseLong(content);
                         break;
                     case PAGE_ID:
-                        revision_id = Long.parseLong(content);
+                        revision_id = Long.parseLong(content.trim());
                         break;
                     case CONTRIBUTOR_USERNAME:
                         contributor_id = Long.parseLong(content);
