@@ -8,7 +8,7 @@ OBJECTS = $(SOURCES:.c=.o)
 
 OUT = program
 
-all: parser.o interface.o structs.o tst.o pqueue.o topN.o
+program: parser.o interface.o structs.o tst.o pqueue.o topN.o
 	$(CC) $(CFLAGS) $(SOURCES) -o $(OUT) $(LIBS)
 
 run: $(OUT)

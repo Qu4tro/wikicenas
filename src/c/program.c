@@ -46,7 +46,6 @@ void answer_query(TAD_istruct qs, char q, char* args){
             printf("%ld ", tN[i]);
         }
         printf("\n");
-        /* long* top_N_articles_with_more_words(long n, TAD_istruct qs); */
     } else if (q == '8'){
         char** titles = titles_with_prefix(args, qs);
         if (titles)
