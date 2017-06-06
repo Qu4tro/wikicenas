@@ -2,70 +2,97 @@ package engine;
 
 import li3.Interface;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class QueryEngineImpl implements Interface {
 
+    Result result;
 
     public void init() {
-
+        result = new Result();
     }
 
     public void load(int nsnaps, ArrayList<String> snaps_paths) {
-
+        assert snaps_paths.size() == nsnaps : "Lied on number of backups";
+        Parser.parse(snaps_paths, result);
+        result.postProcess();
     }
 
     public long all_articles() {
-
-        return 0;
+        return result.getPagesRead();
     }
 
     public long unique_articles() {
-
-        return 0;
+        return (long) result.getPageHashMap().size();
     }
 
     public long all_revisions() {
-
-        return 0;
+        return (long) result.getRevisionHashMap().size();
     }
 
     public ArrayList<Long> top_10_contributors() {
-
-        return new ArrayList<Long>();
+        return result.getContributorsByContributions().stream()
+                                                      .limit(10)
+                                                      .map(c -> c.getId())
+                                                      .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String contributor_name(long contributor_id) {
-
-        return " ";
+        Long id = new Long(contributor_id);
+        return result.getContributorHashMap().get(id).getUsername();
     }
 
     public ArrayList<Long> top_20_largest_articles() {
-
-        return new ArrayList<Long>();
+        return result.getPageByBytes().stream()
+                .limit(20)
+                .map(p -> p.getId())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String article_title(long article_id) {
-
-        return " ";
+        Long id = new Long(article_id);
+        return result.getPageHashMap().get(id).getTitle();
     }
 
     public ArrayList<Long> top_N_articles_with_more_words(int n) {
-
-        return new ArrayList<Long>();
+        return result.getPageByWords().stream()
+                .limit(n)
+                .map(p -> p.getId())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<String> titles_with_prefix(String prefix) {
+        SortedSet<String> contributors = result.getContributorsByName();
+        String start = contributors.stream()
+                .filter(c -> c.startsWith(prefix))
+                .findFirst()
+                .orElse(null);
+        String end = contributors.tailSet(start)
+                .stream()
+                .filter(c -> !c.startsWith(prefix))
+                .findFirst()
+                .get();
 
-        return new ArrayList<String>();
+        if (start == null) {
+            return new ArrayList<>();
+        }
+        return result.getContributorsByName().subSet(start, end)
+                .headSet(end)
+                .stream()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String article_timestamp(long article_id, long revision_id) {
-
-        return " ";
+        Long id = new Long(revision_id);
+        return result.getRevisionHashMap().get(id).getTimestamp();
     }
 
     public void clean() {
-
+        result = new Result();
     }
 }
