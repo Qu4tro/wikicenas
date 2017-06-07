@@ -106,10 +106,13 @@ class Handler extends DefaultHandler {
                 break;
             case "title":
                 page_title = content;
+                break;
             case "timestamp":
                 revision_timestamp = content;
+                break;
             case "username":
                 contributor_username = content;
+                break;
             case "page":
                 result.addPage(page_id, page_title, nBytes, nWords);
               
@@ -120,7 +123,6 @@ class Handler extends DefaultHandler {
                 result.addRevision(revision_id, revision_timestamp);
                 break;
             case "contributor":
-            	
                 result.addContributor(contributor_id, revision_id, contributor_username);
                 break;
         }
