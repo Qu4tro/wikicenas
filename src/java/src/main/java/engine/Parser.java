@@ -93,36 +93,42 @@ class Handler extends DefaultHandler {
                 switch (state){
                     case PAGE_ID:
                         page_id = Long.parseLong(content.trim());
-
+                     
                         break;
                     case REVISION_ID:
                         revision_id = Long.parseLong(content.trim());
-
+                     
                         break;
                     case CONTRIBUTOR_ID:
                         contributor_id = Long.parseLong(content.trim());
+                   
                         break;
                 }
                 break;
             case "title":
-                page_title = content;
+                page_title = content.trim();
+              
                 break;
             case "timestamp":
-                revision_timestamp = content;
+                revision_timestamp = content.trim();
+                
                 break;
             case "username":
-                contributor_username = content;
+                contributor_username = content.trim();
+              
                 break;
             case "page":
                 result.addPage(page_id, page_title, nBytes, nWords);
-              
+            	
                 nBytes = 0;
                 nWords = 0;
                 break;
             case "revision":
+            	
                 result.addRevision(revision_id, revision_timestamp);
                 break;
             case "contributor":
+            	
                 result.addContributor(contributor_id, revision_id, contributor_username);
                 break;
         }

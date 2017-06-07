@@ -19,6 +19,7 @@ public class Result {
     private SortedSet<Page> pageByWords;
     private SortedSet<Page> pageByBytes;
 
+
     public Result(){
         pagesRead = 0;
         pageHashMap = new HashMap<>();
@@ -26,9 +27,9 @@ public class Result {
         contributorHashMap = new HashMap<>();
 
         contributorsByName = new TreeSet<>();
-        contributorsByContributions = new TreeSet<>(comparingInt(Contributor::getnContribuicoes));
-        pageByWords = new TreeSet<>(comparingLong(Page::getnWords));
-        pageByBytes = new TreeSet<>(comparingLong(Page::getnBytes));
+        contributorsByContributions = new TreeSet<>(comparingInt(Contributor::getnContribuicoes).reversed());
+        pageByWords = new TreeSet<>(comparingLong(Page::getnWords).reversed());
+        pageByBytes = new TreeSet<>(comparingLong(Page::getnBytes).reversed());
     }
 
     public void addPage(Long id, String pTitle, long nb, long nw){
