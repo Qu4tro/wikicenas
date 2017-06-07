@@ -52,6 +52,8 @@ class Handler extends DefaultHandler {
         characters = new StringBuilder();
         result = r;
         inWord = false;
+        nBytes= 0;
+        nWords=0;
     }
 
     @Override

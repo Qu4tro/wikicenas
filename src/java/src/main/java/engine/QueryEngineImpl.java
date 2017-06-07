@@ -67,12 +67,12 @@ public class QueryEngineImpl implements Interface {
     }
 
     public ArrayList<String> titles_with_prefix(String prefix) {
-        SortedSet<String> contributors = result.getContributorsByName();
-        String start = contributors.stream()
+        SortedSet<String> titles = result.getTitlesByName();
+        String start = titles.stream()
                 .filter(c -> c.startsWith(prefix))
                 .findFirst()
                 .orElse(null);
-        String end = contributors.tailSet(start)
+        String end = titles.tailSet(start)
                 .stream()
                 .filter(c -> !c.startsWith(prefix))
                 .findFirst()
@@ -81,7 +81,7 @@ public class QueryEngineImpl implements Interface {
         if (start == null) {
             return new ArrayList<>();
         }
-        return result.getContributorsByName().subSet(start, end)
+        return result.getTitlesByName().subSet(start, end)
                 .headSet(end)
                 .stream()
                 .collect(Collectors.toCollection(ArrayList::new));

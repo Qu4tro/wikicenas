@@ -14,7 +14,7 @@ public class Result {
     private Map<Long, Page> pageHashMap;
     private Map<Long, Revision> revisionHashMap;
     private Map<Long, Contributor> contributorHashMap;
-    private SortedSet<String> contributorsByName;
+    private SortedSet<String> titlesByName;
     private SortedSet<Contributor> contributorsByContributions;
     private SortedSet<Page> pageByWords;
     private SortedSet<Page> pageByBytes;
@@ -26,7 +26,7 @@ public class Result {
         revisionHashMap = new HashMap<>();
         contributorHashMap = new HashMap<>();
 
-        contributorsByName = new TreeSet<>();
+        titlesByName = new TreeSet<>();
         contributorsByContributions = new TreeSet<>(comparingInt(Contributor::getnContribuicoes).reversed());
         pageByWords = new TreeSet<>(comparingLong(Page::getnWords).reversed());
         pageByBytes = new TreeSet<>(comparingLong(Page::getnBytes).reversed());
@@ -60,9 +60,9 @@ public class Result {
         pageByBytes.addAll(pageHashMap.values());
         pageByWords.addAll(pageHashMap.values());
         contributorsByContributions.addAll(contributorHashMap.values());
-        contributorsByName.addAll(contributorHashMap.values()
+        titlesByName.addAll(pageHashMap.values()
                                                     .stream()
-                                                    .map(Contributor::getUsername)
+                                                    .map(Page::getTitle)
                                                     .collect(Collectors.toSet()));
     }
 
@@ -94,7 +94,7 @@ public class Result {
         return pageByBytes;
     }
 
-    public SortedSet<String> getContributorsByName() {
-        return contributorsByName;
+    public SortedSet<String> getTitlesByName() {
+        return titlesByName;
     }
 }
