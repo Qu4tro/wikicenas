@@ -1,13 +1,13 @@
 package engine;
 
-import java.io.File;
-import java.util.List;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
+import java.util.List;
 
 public class Parser {
     public static void parse(List<String> filenames, Result result){
@@ -89,48 +89,49 @@ class Handler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String ln, String elemName) throws SAXException {
-        final String content = characters.toString();
+        final String content = characters.toString().trim();
         switch (elemName){
             case "id":
                 switch (state){
                     case PAGE_ID:
-                        page_id = Long.parseLong(content.trim());
+                        page_id = Long.parseLong(content);
                      
                         break;
                     case REVISION_ID:
-                        revision_id = Long.parseLong(content.trim());
+                        revision_id = Long.parseLong(content);
                      
                         break;
                     case CONTRIBUTOR_ID:
-                        contributor_id = Long.parseLong(content.trim());
+                        contributor_id = Long.parseLong(content);
                    
                         break;
                 }
                 break;
+
             case "title":
-                page_title = content.trim();
-              
+                page_title = content;
                 break;
+
             case "timestamp":
-                revision_timestamp = content.trim();
-                
+                revision_timestamp = content;
                 break;
+
             case "username":
-                contributor_username = content.trim();
-              
+                contributor_username = content;
                 break;
+
             case "page":
                 result.addPage(page_id, page_title, nBytes, nWords);
             	
                 nBytes = 0;
                 nWords = 0;
                 break;
+
             case "revision":
-            	
                 result.addRevision(revision_id, revision_timestamp);
                 break;
+
             case "contributor":
-            	
                 result.addContributor(contributor_id, revision_id, contributor_username);
                 break;
         }

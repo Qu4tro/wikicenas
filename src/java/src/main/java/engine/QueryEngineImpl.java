@@ -2,12 +2,9 @@ package engine;
 
 import li3.Interface;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class QueryEngineImpl implements Interface {
 
@@ -62,33 +59,23 @@ public class QueryEngineImpl implements Interface {
     public ArrayList<Long> top_N_articles_with_more_words(int n) {
         return result.getPageByWords().stream()
                 .limit(n)
-                .map(p -> p.getId())
+                .map(Page::getId)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<String> titles_with_prefix(String prefix) {
         SortedSet<String> titles = result.getTitlesByName();
-        String start = titles.stream()
-                .filter(c -> c.startsWith(prefix))
-                .findFirst()
-                .orElse(null);
-        String end = titles.tailSet(start)
-                .stream()
-                .filter(c -> !c.startsWith(prefix))
-                .findFirst()
-                .get();
+        SortedSet<String> fromFirstPrefix = titles.tailSet(prefix);
+        String end = fromFirstPrefix.stream()
+                                    .filter(c -> !c.startsWith(prefix))
+                                    .findFirst()
+                                    .orElse(titles.last());
 
-        if (start == null) {
-            return new ArrayList<>();
-        }
-        return result.getTitlesByName().subSet(start, end)
-                .headSet(end)
-                .stream()
-                .collect(Collectors.toCollection(ArrayList::new));
+        return new ArrayList<>(fromFirstPrefix.headSet(end));
     }
 
     public String article_timestamp(long article_id, long revision_id) {
-        Long id = new Long(revision_id);
+        Long id = revision_id;
         return result.getRevisionHashMap().get(id).getTimestamp();
     }
 
