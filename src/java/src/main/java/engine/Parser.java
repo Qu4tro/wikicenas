@@ -122,7 +122,7 @@ class Handler extends DefaultHandler {
 
             case "text":
                 result.addPage(page_id, page_title, nBytes, nWords);
-            	
+                state = ParserState.PAGE;
                 nBytes = 0;
                 nWords = 0;
                 break;
@@ -145,7 +145,7 @@ class Handler extends DefaultHandler {
     @Override
     public void characters(char ch[], int start, int length) throws SAXException {
         if (state == ParserState.PAGE_TEXT) {
-            nBytes += length;
+        	nBytes += length;
             for (int i = 0; i < length; i++) {
                 if (!inWord && !space(ch[start + i])) {
                     inWord = true;
@@ -155,9 +155,12 @@ class Handler extends DefaultHandler {
                     inWord = false;
                 }
             }
+            
+            
         } else {
             String str = new String(ch, start, length);
             characters.append(str);
+            
         }
     }
 
