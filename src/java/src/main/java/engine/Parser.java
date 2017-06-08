@@ -29,7 +29,7 @@ public class Parser {
 enum ParserState {
     PAGE, PAGE_ID, PAGE_TITLE, PAGE_TEXT,
     REVISION, REVISION_ID, REVISION_TIMESTAMP,
-    CONTRIBUTOR_ID, CONTRIBUTOR_USERNAME;
+    CONTRIBUTOR_ID, CONTRIBUTOR_USERNAME
 }
 
 class Handler extends DefaultHandler {
@@ -52,8 +52,8 @@ class Handler extends DefaultHandler {
         characters = new StringBuilder();
         result = r;
         inWord = false;
-        nBytes= 0;
-        nWords=0;
+        nBytes = 0;
+        nWords = 0;
     }
 
     @Override
@@ -120,7 +120,7 @@ class Handler extends DefaultHandler {
                 contributor_username = content;
                 break;
 
-            case "page":
+            case "text":
                 result.addPage(page_id, page_title, nBytes, nWords);
             	
                 nBytes = 0;
@@ -138,7 +138,7 @@ class Handler extends DefaultHandler {
         characters.setLength(0);
     }
 
-    boolean space(char c){
+    private boolean space(char c){
         return (c == ' ' || c == '\n' || c == '\t');
     }
 

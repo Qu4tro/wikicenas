@@ -1,7 +1,6 @@
 package engine;
 
 public class Revision {
-
     private Long id;
     private String timestamp;
 

@@ -1,11 +1,10 @@
 package engine;
 
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparingInt;
-import static java.util.Comparator.comparingLong;
-
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparingInt;
+import static java.util.Comparator.comparingLong;
 
 
 public class Result {
@@ -61,9 +60,9 @@ public class Result {
         pageByWords.addAll(pageHashMap.values());
         contributorsByContributions.addAll(contributorHashMap.values());
         titlesByName.addAll(pageHashMap.values()
-                                                    .stream()
-                                                    .map(Page::getTitle)
-                                                    .collect(Collectors.toSet()));
+                                       .stream()
+                                       .map(Page::getTitle)
+                                       .collect(Collectors.toSet()));
     }
 
     public Map<Long, Page> getPageHashMap() {

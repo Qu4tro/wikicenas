@@ -1,9 +1,9 @@
 package engine;
 
 public class Contributor {
-    Long id;
-    String username;
-    int nContribuicoes;
+    private Long id;
+    private String username;
+    private int nContribuicoes;
 
     public Contributor(Long id, String username) {
         this.username = username;

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class QueryEngineImpl implements Interface {
 
-    Result result;
+    private Result result;
 
     public void init() {
         result = new Result();
@@ -35,24 +35,24 @@ public class QueryEngineImpl implements Interface {
     public ArrayList<Long> top_10_contributors() {
         return result.getContributorsByContributions().stream()
                                                       .limit(10)
-                                                      .map(c -> c.getId())
+                                                      .map(Contributor::getId)
                                                       .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String contributor_name(long contributor_id) {
-        Long id = new Long(contributor_id);
+        Long id = contributor_id;
         return result.getContributorHashMap().get(id).getUsername();
     }
 
     public ArrayList<Long> top_20_largest_articles() {
         return result.getPageByBytes().stream()
                 .limit(20)
-                .map(p -> p.getId())
+                .map(Page::getId)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String article_title(long article_id) {
-        Long id = new Long(article_id);
+        Long id = article_id;
         return result.getPageHashMap().get(id).getTitle();
     }
 
@@ -64,12 +64,11 @@ public class QueryEngineImpl implements Interface {
     }
 
     public ArrayList<String> titles_with_prefix(String prefix) {
-        SortedSet<String> titles = result.getTitlesByName();
-        SortedSet<String> fromFirstPrefix = titles.tailSet(prefix);
+        SortedSet<String> fromFirstPrefix = result.getTitlesByName().tailSet(prefix);
         String end = fromFirstPrefix.stream()
                                     .filter(c -> !c.startsWith(prefix))
                                     .findFirst()
-                                    .orElse(titles.last());
+                                    .orElse(fromFirstPrefix.last());
 
         return new ArrayList<>(fromFirstPrefix.headSet(end));
     }
