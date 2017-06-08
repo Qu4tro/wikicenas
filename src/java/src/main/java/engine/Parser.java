@@ -136,7 +136,6 @@ class Handler extends DefaultHandler {
                 break;
         }
         characters.setLength(0);
-        state = ParserState.NOWHERE;
     }
 
     private boolean space(char c){
