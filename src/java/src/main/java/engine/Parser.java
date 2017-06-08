@@ -29,7 +29,8 @@ public class Parser {
 enum ParserState {
     PAGE, PAGE_ID, PAGE_TITLE, PAGE_TEXT,
     REVISION, REVISION_ID, REVISION_TIMESTAMP,
-    CONTRIBUTOR_ID, CONTRIBUTOR_USERNAME
+    CONTRIBUTOR_ID, CONTRIBUTOR_USERNAME,
+    NOWHERE
 }
 
 class Handler extends DefaultHandler {
@@ -83,6 +84,8 @@ class Handler extends DefaultHandler {
                 break;
             case "text":
                 state = ParserState.PAGE_TEXT;
+                nBytes = 0;
+                nWords = 0;
                 break;
         }
     }
@@ -95,7 +98,7 @@ class Handler extends DefaultHandler {
                 switch (state){
                     case PAGE_ID:
                         page_id = Long.parseLong(content);
-                     
+
                         break;
                     case REVISION_ID:
                         revision_id = Long.parseLong(content);
@@ -122,9 +125,6 @@ class Handler extends DefaultHandler {
 
             case "text":
                 result.addPage(page_id, page_title, nBytes, nWords);
-            	
-                nBytes = 0;
-                nWords = 0;
                 break;
 
             case "revision":
@@ -136,6 +136,7 @@ class Handler extends DefaultHandler {
                 break;
         }
         characters.setLength(0);
+        state = ParserState.NOWHERE;
     }
 
     private boolean space(char c){
@@ -159,9 +160,5 @@ class Handler extends DefaultHandler {
             String str = new String(ch, start, length);
             characters.append(str);
         }
-    }
-
-    public Result getResult() {
-        return result;
     }
 }
