@@ -150,7 +150,7 @@ class Handler extends DefaultHandler {
                 break;
         }
         characters.setLength(0);
-       
+
     }
 
     private boolean space(char c){
