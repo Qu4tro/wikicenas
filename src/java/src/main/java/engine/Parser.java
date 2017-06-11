@@ -1,12 +1,18 @@
 package engine;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class Parser {
@@ -15,9 +21,16 @@ public class Parser {
         for(String filename: filenames) {
             try {
                 File inputFile = new File(filename);
+
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 SAXParser saxParser = factory.newSAXParser();
-                saxParser.parse(inputFile, handler);
+                InputStream inputStream= new FileInputStream(inputFile);
+                Reader isr = new InputStreamReader(inputStream,"UTF-8");
+                
+              
+                InputSource is = new InputSource(isr);
+                is.setEncoding("utf-8");
+                saxParser.parse(is, handler);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -124,6 +137,7 @@ class Handler extends DefaultHandler {
                 break;
 
             case "text":
+            	inWord=false;
                 result.addPage(page_id, page_title, nBytes, nWords);
                 break;
 
@@ -136,7 +150,7 @@ class Handler extends DefaultHandler {
                 break;
         }
         characters.setLength(0);
-        state = ParserState.NOWHERE;
+       
     }
 
     private boolean space(char c){
@@ -145,9 +159,17 @@ class Handler extends DefaultHandler {
 
     @Override
     public void characters(char ch[], int start, int length) throws SAXException {
+    	String str = new String(ch, start, length);
         if (state == ParserState.PAGE_TEXT) {
-            nBytes += length;
-            for (int i = 0; i < length; i++) {
+            try {
+				nBytes +=  str.getBytes("UTF-8").length;
+			
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			};
+           
+			
+			for (int i = 0; i < length; i++) {
                 if (!inWord && !space(ch[start + i])) {
                     inWord = true;
                     nWords += 1;
@@ -157,7 +179,7 @@ class Handler extends DefaultHandler {
                 }
             }
         } else {
-            String str = new String(ch, start, length);
+            
             characters.append(str);
         }
     }
